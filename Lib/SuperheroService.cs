@@ -1,32 +1,37 @@
-﻿using System;
+﻿using Lib.Abstractions;
+using System;
 using System.Collections.Generic;
 
 namespace Lib
 {
     public class SuperheroService
     {
+        public SuperheroService(ILogger logger, IAvengerRepository avengerRepository)
+        {
+            _AvengerRepository = avengerRepository;
+            _Logger = logger;
+        }
+        IAvengerRepository _AvengerRepository;
+        ILogger _Logger;
         public IEnumerable<Hero> GetAvengers()
         {
-            Logger logger = new Logger();
-            logger.Log("Calling SuperheroService.GetAvengers.");
+            _Logger.Log("Calling SuperheroService.GetAvengers.");
 
-            AvengerRepository avengerRepository = new AvengerRepository();
-            var avengers = avengerRepository.FetchAll();
+            var avengers = _AvengerRepository.FetchAll();
 
-            logger.Log("SuperheroService.GetAvengers called.");
+            _Logger.Log("SuperheroService.GetAvengers called.");
 
             return avengers;
         }
 
         public Hero GetAvenger(string name)
         {
-            Logger logger = new Logger();
-            logger.Log("Calling SuperheroService.GetAvenger('{0}').", name);
+            _Logger.Log("Calling SuperheroService.GetAvenger('{0}').", name);
 
-            AvengerRepository avengerRepository = new AvengerRepository();
-            var avenger = avengerRepository.Fetch(name);
+           
+            var avenger = _AvengerRepository.Fetch(name);
 
-            logger.Log("SuperheroService.GetAvenger('{0}') called.", name);
+            _Logger.Log("SuperheroService.GetAvenger('{0}') called.", name);
 
             return avenger;
         }

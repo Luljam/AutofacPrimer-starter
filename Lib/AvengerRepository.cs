@@ -1,11 +1,18 @@
-﻿using System;
+﻿using Lib.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Lib
 {
-    public class AvengerRepository
+    public class AvengerRepository : IAvengerRepository
     {
+        public AvengerRepository(ILogger logger)
+        {
+            _logger = logger;
+        }
+        ILogger _logger;
+
         public IEnumerable<Hero> FetchAll()
         {
             // simulate loading from datatabase
@@ -19,8 +26,7 @@ namespace Lib
                 new Hero("Spiderman", "Peter Parker", "Tarzan-like Swinging Abilities")
             };
 
-            Logger logger = new Logger();
-            logger.Log("AvengerRepository.FetchAll called - Database hit.");
+            _logger.Log("AvengerRepository.FetchAll called - Database hit.");
 
             return heroes;
         }
@@ -30,8 +36,7 @@ namespace Lib
             // simulate loading from datatabase
             var heroes = FetchAll();
 
-            Logger logger = new Logger();
-            logger.Log("AvengerRepository.Fetch('{0}') called - Database hit.", name);
+           _logger.Log("AvengerRepository.Fetch('{0}') called - Database hit.", name);
 
             return heroes.FirstOrDefault(item => item.SuperheroName.ToLower() == name.ToLower());
         }
