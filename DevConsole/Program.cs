@@ -1,4 +1,6 @@
-﻿using Lib;
+﻿using Autofac;
+using Lib;
+using Lib.Abstractions;
 using System;
 using System.Linq;
 
@@ -20,7 +22,16 @@ namespace DevConsole
                 {
                     case "1":
                         {
-                            SuperheroService superheroService = new SuperheroService();
+                            ContainerBuilder builder = new ContainerBuilder(); // Class Autofac
+
+                            builder.RegisterType<AvengerRepository>().As<IAvengerRepository>();
+                            builder.RegisterType<Logger>().As<ILogger>();
+                            builder.RegisterType<SuperheroService>(); // register the concret class
+
+                            IContainer container = builder.Build();
+
+                            var superheroService = container.Resolve<SuperheroService>();
+
 
                             var avengers = superheroService.GetAvengers();
                             Console.WriteLine();
@@ -37,7 +48,15 @@ namespace DevConsole
                             string name = Console.ReadLine();
                             if (!string.IsNullOrWhiteSpace(name))
                             {
-                                SuperheroService superheroService = new SuperheroService();
+                                ContainerBuilder builder = new ContainerBuilder();
+
+                                builder.RegisterType<AvengerRepository>().As<IAvengerRepository>();
+                                builder.RegisterType<Logger>().As<ILogger>();
+                                builder.RegisterType<SuperheroService>(); // register the concret class
+
+                                IContainer container = builder.Build();
+
+                                var superheroService = container.Resolve<SuperheroService>();
 
                                 var avenger = superheroService.GetAvenger(name);
                                 if (avenger != null)
